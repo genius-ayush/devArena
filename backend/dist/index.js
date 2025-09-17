@@ -4,11 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 5000;
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+const auth_1 = __importDefault(require("./routes/auth"));
+const contest_1 = __importDefault(require("./routes/contest"));
+const question_1 = __importDefault(require("./routes/question"));
+const result_1 = __importDefault(require("./routes/result"));
 app.get('/', (req, res) => {
     res.send('hello world');
 });
+app.use('/auth', auth_1.default);
+app.use('/contest', contest_1.default);
+app.use('/question', question_1.default);
+app.use('result', result_1.default);
 app.listen(port, () => {
     console.log(`Application runnint at ${port}`);
 });
