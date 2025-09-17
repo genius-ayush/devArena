@@ -22,5 +22,5 @@ app.use('result' , resultRoutes) ;
 
 
 app.listen(port , ()=>{
-    console.log(`Application runnint at ${port}`) ;
+    console.log(`Application running at ${port}`) ;
 })
