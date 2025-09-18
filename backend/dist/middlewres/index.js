@@ -8,7 +8,6 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const setterMiddleware = (req, res, next) => {
     var _a;
     const authtoken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
-    console.log(authtoken);
     if (!authtoken) {
         res.send(403).send({
             message: "Invalid auth token",
@@ -18,23 +17,18 @@ const setterMiddleware = (req, res, next) => {
     }
     try {
         jsonwebtoken_1.default.verify(authtoken, "S3CRET", (err, payload) => {
-            console.log("s1 ");
             if (err) {
                 return res.status(403);
             }
             if (!payload) {
-                console.log("s2");
                 res.status(403);
                 return;
             }
             if (typeof (payload) == 'string') {
-                console.log("s3");
                 res.status(403);
                 return;
             }
-            console.log(payload);
             req.headers['userId'] = payload.userId;
-            console.log(payload.id);
             next();
         });
     }

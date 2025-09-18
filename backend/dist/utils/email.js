@@ -11,8 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmail = void 0;
 const resend_1 = require("resend");
-// const apikey = process.env.RESEND_API_KEY
-const resend = new resend_1.Resend("re_HH6c6CA7_4ekrHUNyj6MN2wEkcg3vnfyn");
+const resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 const sendEmail = (email, otp) => __awaiter(void 0, void 0, void 0, function* () {
     const emailHtml = `
   <html>

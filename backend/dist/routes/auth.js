@@ -56,8 +56,6 @@ router.post('/send_otp', (req, res) => __awaiter(void 0, void 0, void 0, functio
         const { otp, expires } = yield totp_generator_1.TOTP.generate(base32.encode(data.email + process.env.JWT_SECRET));
         (0, email_1.sendEmail)(data.email, otp);
         otpCache.set(data.email, otp);
-        console.log(otp);
-        console.log(expires);
         res.send({ otp, expires });
     }
     catch (error) {

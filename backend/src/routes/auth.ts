@@ -6,7 +6,6 @@ import { sendEmail } from '../utils/email';
 import jwt from 'jsonwebtoken' ; 
 import { PrismaClient } from '../../generated/prisma';
 import { participantMiddleware, setterMiddleware } from '../middlewres';
-
 const router = Router();
 
 const otpCache = new Map<string , string>() ; 

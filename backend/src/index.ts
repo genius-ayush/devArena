@@ -1,11 +1,13 @@
 import express from 'express' ; 
+import dotenv from 'dotenv' ; 
+
 import cors from 'cors' ; 
 const app = express() ;
 const port = 5000 ; 
 
 app.use(cors()) ; 
 app.use(express.json()) ;
-
+dotenv.config() ; 
 import authRoutes from './routes/auth' ; 
 import contestRoutes from './routes/contest' ; 
 import questionsRoutes from './routes/question' ; 
