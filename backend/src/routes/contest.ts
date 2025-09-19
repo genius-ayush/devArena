@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { setterMiddleware } from "../middlewres";
+import { participantMiddleware, setterMiddleware } from "../middlewres";
 import { PrismaClient } from "../../generated/prisma";
 import { ContestSchema, QuestionSchema, UpdateContestSchema } from "../types";
 
@@ -52,7 +52,7 @@ router.post('/' , setterMiddleware ,  async(req , res)=>{
     }
 })
 
-//getcontest
+//getcontest of setters 
 router.get('/' ,setterMiddleware , async(req , res)=>{
   const setterId = req.headers["userId"] ; 
 
@@ -71,6 +71,23 @@ router.get('/' ,setterMiddleware , async(req , res)=>{
 
 
 
+})
+
+router.get('/participant' , participantMiddleware , async(req ,res)=>{
+
+    const participantId = req.headers['userId'] ; 
+
+    if(typeof(participantId) != 'string'){
+        return res.status(500).send("invalid partipant id") ;
+    }
+
+    try{
+        const contests = await prismaClient.contest.findMany() ; 
+        res.status(200).json(contests) ; 
+    }catch(error){
+        return res.status(500).json(error) ; 
+        
+    }
 })
 
 
@@ -132,5 +149,130 @@ router.get('/:id' ,setterMiddleware , async(req , res)=>{
 //         return ; 
 //     }
 // })
+
+
+router.post('/:contestId/join' , participantMiddleware , async(req , res)=>{
+
+    const participantId = req.headers['userId'] ; 
+    const contestId = req.params.contestId ;
+
+
+    if(typeof(participantId) != 'string'){
+        return res.status(500).send("invalid partipant id") ;
+    }
+
+
+    if(!contestId){
+        return res.status(500).json('no contestId found') ; 
+    }
+
+    try{
+
+        const participation = await prismaClient.contestParticipation.upsert({
+            where: {
+                participantId_contestId: {
+                  participantId,
+                  contestId,
+                },
+              },
+        
+            update : {} , 
+            create:{
+                participantId , contestId , status: 'REGISTERED'
+            }
+        })
+
+        res.status(200).json(participation) ; 
+    }catch(error){
+        console.error(error) ; 
+        res.status(500).json({
+            message: "error joining the contest"  
+        })
+    }
+})
+
+router.patch('/contest/:contestId/start' , participantMiddleware , async(req , res)=>{
+    
+    const participantId = req.headers['userId'] ; 
+    const contestId = req.params.contestId ; 
+
+    if(typeof(participantId) != 'string'){
+        return  res.status(500).json('invalid participationid type') ;
+    }
+
+    const participantion = await prismaClient.contestParticipation.update({
+        where: {
+            participantId_contestId: {
+              participantId,
+              contestId,
+            },
+          } , 
+
+         data:{
+            startedAt : Date.now().toString() , 
+            status :'IN_PROGRESS' 
+
+         }
+
+    })
+
+    res.status(200).json(participantion) ; 
+})
+
+router.post('/contest/:contestId/:questionId/submit' , participantMiddleware , async(req , res)=>{
+
+    const participantId = req.headers['userId'] ; 
+    const {contestId , questionId} = req.params ; 
+    const answer = req.body ; 
+    
+    if(typeof(participantId) != 'string'){
+        return res.status(500).send("invalid participationid") ; 
+    }
+
+    const participation = await prismaClient.contestParticipation.findUnique({
+        where:{
+            id : participantId
+        }
+    })
+
+    if(!participation){
+        return res.status(400).json({error:'not registered'})
+    }
+
+    const question  = await prismaClient.question.findUnique({
+        where:{
+            id : questionId
+        }
+    })
+
+    if(!question){
+        return res.status(404).json('cannot get any questions') ; 
+    }
+
+    const isCorrect = question.checkParameter.trim() === answer.trim();
+
+
+    const submission = await prismaClient.submission.create({
+        data:{
+            participantId , 
+            contestId , 
+            questionId , 
+            contestParticipationId : participantId , 
+            answer , 
+            score : isCorrect ? question.marks : 0 , 
+            isCorrect ,
+        }
+    })
+
+    await prismaClient.contestParticipation.update({
+        where :{id :participantId} , 
+        data:{
+            totalScore : {increment:submission.score}
+        }
+    })
+
+
+    
+})
 
 export default router ; 

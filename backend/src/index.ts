@@ -10,7 +10,7 @@ app.use(express.json()) ;
 dotenv.config() ; 
 import authRoutes from './routes/auth' ; 
 import contestRoutes from './routes/contest' ; 
-import questionsRoutes from './routes/question' ; 
+import participatonRoutes from './routes/participate' ; 
 import resultRoutes from './routes/result'  ; 
 
 app.get('/' , (req , res)=>{
@@ -19,7 +19,7 @@ app.get('/' , (req , res)=>{
 
 app.use('/auth' , authRoutes) ; 
 app.use('/contest' , contestRoutes) ; 
-app.use('/question' , questionsRoutes) ; 
+app.use('/participaton' , participatonRoutes) ; 
 app.use('result' , resultRoutes) ; 
 
 
