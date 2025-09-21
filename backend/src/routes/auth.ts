@@ -27,7 +27,7 @@ router.post('/send_otp', async (req: Request, res: Response) => {
         sendEmail(data.email , otp) ; 
         otpCache.set(data.email , otp) ;  
         
-        res.send({ otp, expires });
+        res.status(200).send("check you email") ;
 
     } catch (error) {
         console.log(error);
@@ -62,6 +62,7 @@ router.post('/signin_setter' , async(req , res)=>{
             })
 
             if(setter){
+                console.log(process.env.JWT_SECRET)
                 const token = jwt.sign({userId : setter.id} , process.env.JWT_SECRET!) ; 
                 return res.status(200).json(token) ; 
 

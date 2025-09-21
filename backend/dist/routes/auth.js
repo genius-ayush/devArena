@@ -56,7 +56,7 @@ router.post('/send_otp', (req, res) => __awaiter(void 0, void 0, void 0, functio
         const { otp, expires } = yield totp_generator_1.TOTP.generate(base32.encode(data.email + process.env.JWT_SECRET));
         (0, email_1.sendEmail)(data.email, otp);
         otpCache.set(data.email, otp);
-        res.send({ otp, expires });
+        res.status(200).send("check you email");
     }
     catch (error) {
         console.log(error);
@@ -79,6 +79,7 @@ router.post('/signin_setter', (req, res) => __awaiter(void 0, void 0, void 0, fu
                 }
             });
             if (setter) {
+                console.log(process.env.JWT_SECRET);
                 const token = jsonwebtoken_1.default.sign({ userId: setter.id }, process.env.JWT_SECRET);
                 return res.status(200).json(token);
             }
