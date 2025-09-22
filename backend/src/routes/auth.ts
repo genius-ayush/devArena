@@ -8,7 +8,8 @@ import { PrismaClient } from '../../generated/prisma';
 import { participantMiddleware, setterMiddleware } from '../middlewres';
 const router = Router();
 
-const otpCache = new Map<string , string>() ; 
+const otpCache = new Map<string , string>() ;
+otpCache.set("ayushsanjayrawal@gmail.com" , "829997")
 const prismaClient = new PrismaClient() ; 
 
 router.post('/send_otp', async (req: Request, res: Response) => {
@@ -22,7 +23,7 @@ router.post('/send_otp', async (req: Request, res: Response) => {
             return;
         }
 
-        const { otp, expires } = await TOTP.generate(base32.encode(data.email + process.env.JWT_SECRET!))
+        const { otp, expires } = await TOTP.generate(base32.encode(data.email + process.env.JWT_SECRET_SETTER!))
 
         sendEmail(data.email , otp) ; 
         otpCache.set(data.email , otp) ;  
@@ -44,15 +45,18 @@ router.post('/send_otp', async (req: Request, res: Response) => {
 router.post('/signin_setter' , async(req , res)=>{
 
     const{success , data} = Signin.safeParse(req.body) ; 
+    console.log(data) ;
 
     if(!success){
+        console.log("reached here")
         res.status(411).json('invalid input') ; 
         return ; 
     }
 
     if(otpCache.has(data.email)){
+        console.log("reached inside the map")
         if(otpCache.get(data.email) == data.otp){
-
+            console.log("mapping finding")
             const setter = await prismaClient.setter.findUnique({
 
                 where:{
@@ -63,7 +67,7 @@ router.post('/signin_setter' , async(req , res)=>{
 
             if(setter){
                 console.log(process.env.JWT_SECRET)
-                const token = jwt.sign({userId : setter.id} , process.env.JWT_SECRET!) ; 
+                const token = jwt.sign({userId : setter.id} , process.env.JWT_SECRET_SETTER!) ; 
                 return res.status(200).json(token) ; 
 
             }else{
@@ -81,9 +85,11 @@ router.post('/signin_setter' , async(req , res)=>{
             }
             
         }else{
+            console.log("no mapping")
             res.status(411).json('invlid input') ; 
         }
     }else{
+        console.log("no mapping")
         res.status(411).json('invalid input') ;
         return ;  
     }
@@ -95,7 +101,7 @@ router.post('/signin_setter' , async(req , res)=>{
 router.post('/signin_participant' , async(req , res)=>{
 
     const{success , data} = Signin.safeParse(req.body) ; 
-
+    
     if(!success){
         res.status(411).json('invalid input') ; 
         return ; 

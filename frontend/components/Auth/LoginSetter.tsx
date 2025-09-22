@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form"
 
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 
 const sendEmailSchema = z.email();
@@ -33,10 +34,12 @@ const FormSchema = z.object({
 
 
 function LoginSetterPage() {
-  const [mail, setMail] = useState<string | null>();
+  const [mail, setMail] = useState<string | null>("ayushsanjayrawal@gmail.com");
   const [error, setError] = useState<any>();
   const [send, setSend] = useState(false);
   const isDisabled = !mail
+  const [token , setToken] = useState<string | null>(localStorage.getItem("token")) ; 
+  const router = useRouter() ; 
 
   type sendEmailType = z.infer<typeof sendEmailSchema>;
 
@@ -72,20 +75,24 @@ function LoginSetterPage() {
 
   const onSubmit =  async (data: z.infer<typeof FormSchema>)=> {
     
-   console.log(data.pin) ;
-   console.log(mail) ; 
-  
+   
 
    const response = await axios.post("http://localhost:5000/auth/signin_setter" , {email : mail , otp : data.pin}) ; 
 
-   console.log(response) ;
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+   localStorage.setItem("token" , response.data) ;
+   setToken(response.data) ; 
+   
+    // toast("You submitted the following values", {
+    //   description: (
+    //     <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // })
+  }
+
+  if(token){
+    router.push('/setterDashboard')
   }
 
   if (send) {

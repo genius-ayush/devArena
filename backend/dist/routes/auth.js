@@ -45,6 +45,7 @@ const prisma_1 = require("../../generated/prisma");
 const middlewres_1 = require("../middlewres");
 const router = (0, express_1.Router)();
 const otpCache = new Map();
+otpCache.set("ayushsanjayrawal@gmail.com", "829997");
 const prismaClient = new prisma_1.PrismaClient();
 router.post('/send_otp', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -53,7 +54,7 @@ router.post('/send_otp', (req, res) => __awaiter(void 0, void 0, void 0, functio
             res.status(411).json('invalid input');
             return;
         }
-        const { otp, expires } = yield totp_generator_1.TOTP.generate(base32.encode(data.email + process.env.JWT_SECRET));
+        const { otp, expires } = yield totp_generator_1.TOTP.generate(base32.encode(data.email + process.env.JWT_SECRET_SETTER));
         (0, email_1.sendEmail)(data.email, otp);
         otpCache.set(data.email, otp);
         res.status(200).send("check you email");
@@ -67,12 +68,16 @@ router.post('/send_otp', (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 router.post('/signin_setter', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { success, data } = types_1.Signin.safeParse(req.body);
+    console.log(data);
     if (!success) {
+        console.log("reached here");
         res.status(411).json('invalid input');
         return;
     }
     if (otpCache.has(data.email)) {
+        console.log("reached inside the map");
         if (otpCache.get(data.email) == data.otp) {
+            console.log("mapping finding");
             const setter = yield prismaClient.setter.findUnique({
                 where: {
                     email: data.email,
@@ -80,7 +85,7 @@ router.post('/signin_setter', (req, res) => __awaiter(void 0, void 0, void 0, fu
             });
             if (setter) {
                 console.log(process.env.JWT_SECRET);
-                const token = jsonwebtoken_1.default.sign({ userId: setter.id }, process.env.JWT_SECRET);
+                const token = jsonwebtoken_1.default.sign({ userId: setter.id }, process.env.JWT_SECRET_SETTER);
                 return res.status(200).json(token);
             }
             else {
@@ -94,10 +99,12 @@ router.post('/signin_setter', (req, res) => __awaiter(void 0, void 0, void 0, fu
             }
         }
         else {
+            console.log("no mapping");
             res.status(411).json('invlid input');
         }
     }
     else {
+        console.log("no mapping");
         res.status(411).json('invalid input');
         return;
     }
