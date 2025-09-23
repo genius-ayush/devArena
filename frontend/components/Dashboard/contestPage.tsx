@@ -1,5 +1,6 @@
 import React from 'react'
 import ContestCard from '../ContestCard'
+import { Button } from '../ui/button'
 
 const contests = [ 
   
@@ -8,7 +9,7 @@ const contests = [
   desc : "This is a algorithimc contest where you have to solve algorithmic questions" , 
   startTime : "8:30 pm" , 
   endTime : "9:30 pm " , 
-  button : 'Participate' , 
+  button : 'Edit' , 
 } , 
 
 
@@ -17,7 +18,7 @@ const contests = [
   desc : "This is a dev contest where you have to solve coding questions" , 
   startTime : "8:30 pm" , 
   endtime : "9:30 pm " , 
-  button : 'Participate', 
+  button : 'Edit', 
 
 } , 
 
@@ -26,27 +27,25 @@ const contests = [
   desc : "This is a algorithimc contest where you have to solve algorithmic questions" , 
   startTime : "8:30 pm" , 
   endtime : "9:30 pm " , 
-  button : 'Participate',
+  button : 'Edit',
 }
 
 ]
 
-function Contests() {
+function ContestPage() {
   return (
-    <div>
-
-      <div className='text-center mt-38 text-2xl font-bold'>Contest</div>
-          
-          <div className='flex gap-2 items-center justify-center mt-20'>
-          {contests.map(contest=> (
-            <ContestCard name={contest.name} desc={contest.desc} startTime={contest.startTime} button={contest.button}/>
-          ))}
-          </div>
-      <div>
-
+    <div className='' >
+      <div className='flex justify-between'>
+      <div className='text-2xl font-bold mb-10'>Contests</div>
+      <Button>Create Contest</Button>
+      </div>
+      <div className='flex flex-wrap gap-3'>
+        {contests.map((contest)=>(
+          <ContestCard name={contest.name} desc={contest.desc} startTime={contest.startTime} button={contest.button}/>
+        ))}
       </div>
     </div>
   )
 }
 
-export default Contests
+export default ContestPage  

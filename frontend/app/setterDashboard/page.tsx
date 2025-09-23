@@ -1,8 +1,11 @@
 import React from 'react'
+import ContestPage from './contests/page';
 
 function SetterDashboard() {
   return (
-    <div>Setter Dashboard</div>
+    <div className="">
+   <ContestPage/>
+  </div>
   )
 }
 

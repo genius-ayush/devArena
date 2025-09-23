@@ -1,21 +1,40 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
-import { Label } from './ui/label'
-import { Input } from './ui/input'
 
-function ContestCard() {
+
+
+interface contestProps {
+  name : string ; 
+  desc : string ; 
+  startTime ?: string ; 
+  endTime ?: string  ; 
+  button : string ; 
+}
+
+
+
+function ContestCard(contest : contestProps) {
+
+  useEffect(()=>{
+    
+  } , [])
+
   return (
     <Card className="w-full max-w-sm">
     <CardHeader>
-      <CardTitle>Algorithm 101</CardTitle>
+      <CardTitle>{contest.name}</CardTitle>
     </CardHeader>
+
     <CardContent>
-      Time: 20 Sept 2025
+      {contest.desc}
+    </CardContent>
+    <CardContent>
+      Starts on : {contest.startTime}
     </CardContent>
     <CardFooter className="flex-col gap-2">
       <Button type="submit" className="w-full">
-        Participate
+        {contest.button}
       </Button>
      
     </CardFooter>
