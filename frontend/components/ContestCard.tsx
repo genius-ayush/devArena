@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
+import axios from 'axios';
+import { response } from 'express';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -16,9 +20,6 @@ interface contestProps {
 
 function ContestCard(contest : contestProps) {
 
-  useEffect(()=>{
-    
-  } , [])
 
   return (
     <Card className="w-full max-w-sm">

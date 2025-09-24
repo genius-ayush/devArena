@@ -1,8 +1,11 @@
+import CreateContestPage from '@/components/Dashboard/createContestPage'
 import React from 'react'
 
 function CreateContest() {
   return (
-    <div>CreateContest</div>
+    <div>
+      <CreateContestPage/>
+    </div>
   )
 }
 
