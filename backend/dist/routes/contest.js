@@ -17,6 +17,7 @@ const prismaClient = new prisma_1.PrismaClient();
 const router = (0, express_1.Router)();
 //create context
 router.post('/', middlewres_1.setterMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     const setterId = req.headers["userId"];
     if (typeof (setterId) != 'string') {
         res.send(500).send("invalid setterId");

@@ -10,7 +10,7 @@ const router = Router() ;
 //create context
 router.post('/' , setterMiddleware ,  async(req , res)=>{
 
-    
+    console.log(req.body) ; 
     const setterId  = req.headers["userId"]! ; 
     if(typeof(setterId) != 'string'){
         res.send(500).send("invalid setterId") ; 

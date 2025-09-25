@@ -4,6 +4,7 @@ import ContestCard from '../ContestCard'
 import { Button } from '../ui/button'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '../ui/shadcn-io/spinner';
 
 interface contestProps{
 
@@ -50,6 +51,7 @@ function ContestPage() {
   const [error , setError] = useState("") ; 
   const [contests , setContests] = useState<contestProps[]>([]) ; 
   const router = useRouter() ;
+  const [loading , setLoading] = useState(false) ; 
   
   
   const formatted= (input : string)=>{
@@ -67,7 +69,7 @@ function ContestPage() {
     const fetchData = async()=>{
     const token = localStorage.getItem("token") ; 
     console.log(token) ; 
-
+    setLoading(true) ; 
     if(!token){
       router.push("http://localhost:3000/auth/loginSetter")
     }
@@ -86,10 +88,16 @@ function ContestPage() {
         setError("error fetching Contests") ;  
 
       }
+
+      setLoading(false) ; 
     }
 
     fetchData() ; 
   } , [])
+
+  if(loading){
+    return <Spinner/>
+  }
 
 
   return (

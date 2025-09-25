@@ -16,6 +16,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Plus, Trash } from "lucide-react"
+import { useState } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { LoaderOne } from "./loader"
+import { Spinner } from "./shadcn-io/spinner"
 
 const questionSchema = z.object({
   problemStatement: z.string().min(2, {
@@ -26,8 +31,8 @@ const questionSchema = z.object({
     message: "check parameter must be atleast 2 characters"
   }),
 
-  marks: z.coerce.string(),
-  questionOrder: z.coerce.string()
+  marks: z.coerce.number(),
+  questionOrder: z.coerce.number()
 })
 
 const formSchema = z.object({
@@ -39,34 +44,59 @@ const formSchema = z.object({
     message: "description must be of atleast 2 characters."
   }),
 
-  questionCount: z.coerce.string(),
-  totalMarks: z.coerce.string(),
-  startTime: z.string(),
-  endTime: z.string(),
-  question: z.array(questionSchema),
+  questionCount: z.coerce.number(),
+  totalMarks: z.coerce.number(),
+  startTime: z.preprocess(
+    (val) => (typeof val === "string" ? new Date(val).toISOString() : val),
+    z.string().datetime()
+  ),
+  endTime: z.preprocess(
+    (val) => (typeof val === "string" ? new Date(val).toISOString() : val),
+    z.string().datetime()
+  ),
+  questions: z.array(questionSchema),
 
 })
 
 export function CreateContestForm() {
+  const [loading , setLoading] = useState(false) ; 
+  const router = useRouter() ; 
+  const [error , setError] = useState<any>() ; 
   const form = useForm<z.infer<typeof formSchema>>({
 
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
-      question: [],
+      questions: [],
     }
   })
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "question",
+    name: "questions",
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const onSubmit  = async(values: z.infer<typeof formSchema>)=> {
+   
+    
+    const token  = localStorage.getItem("token") ; 
+
+    try{
+      setLoading(true) ; 
+      const res = await axios.post("http://localhost:5000/contest" , values , {headers :{ Authorization : `Bearer ${token}`}})
+      
+      setLoading(false) ; 
+      router.push('/setterDashboard')
+    }catch(error){
+      console.error("err" , error) ; 
+      setError(error) ;    
+    }
   }
-  // ...
+
+  if(loading){
+    return(
+      <Spinner/>
+    )
+  }
 
   return (
     <Form {...form} >
@@ -188,7 +218,7 @@ export function CreateContestForm() {
           >
             <FormField
               control={form.control}
-              name={`question.${index}.problemStatement`}
+              name={`questions.${index}.problemStatement`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Problem Statement</FormLabel>
@@ -202,7 +232,7 @@ export function CreateContestForm() {
 
             <FormField
               control={form.control}
-              name={`question.${index}.checkParameter`}
+              name={`questions.${index}.checkParameter`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Check Parameter</FormLabel>
@@ -216,7 +246,7 @@ export function CreateContestForm() {
 
             <FormField
               control={form.control}
-              name={`question.${index}.marks`}
+              name={`questions.${index}.marks`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Marks</FormLabel>
@@ -230,7 +260,7 @@ export function CreateContestForm() {
 
             <FormField
               control={form.control}
-              name={`question.${index}.questionOrder`}
+              name={`questions.${index}.questionOrder`}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Question Order</FormLabel>
@@ -260,7 +290,7 @@ export function CreateContestForm() {
             append({
               problemStatement: "",
               checkParameter: "",
-              marks: 0,
+              marks: 0 ,
               questionOrder: fields.length + 1,
             })
           }
