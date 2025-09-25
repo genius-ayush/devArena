@@ -26,8 +26,8 @@ const questionSchema = z.object({
     message: "check parameter must be atleast 2 characters"
   }),
 
-  marks: z.number(),
-  questionOrder: z.number()
+  marks: z.coerce.string(),
+  questionOrder: z.coerce.string()
 })
 
 const formSchema = z.object({
@@ -39,16 +39,17 @@ const formSchema = z.object({
     message: "description must be of atleast 2 characters."
   }),
 
-  questionCount: z.number(),
-  totalMarks: z.number(),
-  startTime: z.iso.datetime(),
-  endTime: z.iso.datetime(),
+  questionCount: z.coerce.string(),
+  totalMarks: z.coerce.string(),
+  startTime: z.string(),
+  endTime: z.string(),
   question: z.array(questionSchema),
 
 })
 
 export function CreateContestForm() {
   const form = useForm<z.infer<typeof formSchema>>({
+
     resolver: zodResolver(formSchema),
     defaultValues: {
       question: [],
