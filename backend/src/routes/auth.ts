@@ -101,6 +101,7 @@ router.post('/signin_setter' , async(req , res)=>{
 router.post('/signin_participant' , async(req , res)=>{
 
     const{success , data} = Signin.safeParse(req.body) ; 
+
     
     if(!success){
         res.status(411).json('invalid input') ; 
@@ -109,7 +110,7 @@ router.post('/signin_participant' , async(req , res)=>{
 
     if(otpCache.has(data.email)){
         if(otpCache.get(data.email) == data.otp){
-
+           
             const participant = await prismaClient.participant.findUnique({
 
                 where:{
@@ -117,9 +118,10 @@ router.post('/signin_participant' , async(req , res)=>{
                     email : data.email , 
                 }
             })
+ 
 
             if(participant){
-                const token = jwt.sign({userId : participant.id} , process.env.JWT_SECRET!) ; 
+                const token = jwt.sign({userId : participant.id} , process.env.JWT_SECRET_PARTICIPANT!) ; 
                 return res.status(200).json(token) ; 
 
             }else{
@@ -129,8 +131,8 @@ router.post('/signin_participant' , async(req , res)=>{
                     }
                 })
 
-                const token = jwt.sign({userId : participant.id} , process.env.JWT_SECRET!)
-
+                const token = jwt.sign({userId : participant.id} , process.env.JWT_SECRET_PARTICIPANT!)
+                
                 return res.status(200).json(
                     token
                 )

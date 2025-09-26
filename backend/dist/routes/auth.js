@@ -123,7 +123,7 @@ router.post('/signin_participant', (req, res) => __awaiter(void 0, void 0, void 
                 }
             });
             if (participant) {
-                const token = jsonwebtoken_1.default.sign({ userId: participant.id }, process.env.JWT_SECRET);
+                const token = jsonwebtoken_1.default.sign({ userId: participant.id }, process.env.JWT_SECRET_PARTICIPANT);
                 return res.status(200).json(token);
             }
             else {
@@ -132,7 +132,7 @@ router.post('/signin_participant', (req, res) => __awaiter(void 0, void 0, void 
                         email: data.email
                     }
                 });
-                const token = jsonwebtoken_1.default.sign({ userId: participant.id }, process.env.JWT_SECRET);
+                const token = jsonwebtoken_1.default.sign({ userId: participant.id }, process.env.JWT_SECRET_PARTICIPANT);
                 return res.status(200).json(token);
             }
         }

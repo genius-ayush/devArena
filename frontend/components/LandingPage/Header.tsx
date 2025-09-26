@@ -39,8 +39,8 @@ export default function Header() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <NavbarButton variant="primary" href="http://localhost:3000/auth/loginSetter">Login</NavbarButton>
-            <NavbarButton variant="primary">Organize Contest</NavbarButton>
+            <NavbarButton variant="primary" href="http://localhost:3000/auth/loginParticipant">Login</NavbarButton>
+            <NavbarButton variant="primary" href="http://localhost:3000/auth/loginSetter">Organize Contest</NavbarButton>
           <ThemeButton/>
           </div>
         </NavBody>
