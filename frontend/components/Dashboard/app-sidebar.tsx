@@ -1,3 +1,4 @@
+'use client'
 import { Calendar, ChevronUp, Home, Inbox, Search, Settings, User2 } from "lucide-react"
 
 import {
@@ -12,6 +13,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { useRouter } from "next/navigation"
 
 // Menu items.
 const items = [
@@ -40,12 +42,13 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const router = useRouter() ;
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
             <div className="border-b pb-4 pt-4">
-          <SidebarGroupLabel className="font-bold text-xl">DevArena</SidebarGroupLabel>
+          <SidebarGroupLabel className="font-bold text-xl" onClick={()=> router.push("/")}>DevArena</SidebarGroupLabel>
           </div>
           <SidebarGroupContent>
             <SidebarMenu className="pt-5">

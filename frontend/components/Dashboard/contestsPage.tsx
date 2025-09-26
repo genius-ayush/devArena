@@ -46,7 +46,7 @@ interface contestProps{
 
 // ]
 
-function ContestPage() {
+function ContestsPage() {
 
   const [error , setError] = useState("") ; 
   const [contests , setContests] = useState<contestProps[]>([]) ; 
@@ -54,7 +54,7 @@ function ContestPage() {
   const [loading , setLoading] = useState(false) ; 
   
   
-  const formatted= (input : string)=>{
+  const formatted = (input : string)=>{
     return new Date(input).toLocaleString("en-IN", {
       day: "2-digit",
       month: "short",
@@ -109,11 +109,11 @@ function ContestPage() {
       </div>
       <div className='flex flex-wrap gap-3'>
         {contests.map((contest)=>(
-          <ContestCard key={contest.id} name={contest.name} desc={contest.description} startTime={formatted(contest.startTime)} button="Edit"/>
+          <ContestCard key={contest.id} name={contest.name} desc={contest.description} startTime={formatted(contest.startTime)} button="Edit" id={contest.id}/>
         ))}
       </div>
     </div>
   )
-}
+} 
 
-export default ContestPage  
+export default ContestsPage

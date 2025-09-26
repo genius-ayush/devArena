@@ -5,6 +5,7 @@ import { Button } from './ui/button'
 import axios from 'axios';
 import { response } from 'express';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 
@@ -14,13 +15,14 @@ interface contestProps {
   startTime ?: string ; 
   endTime ?: string  ; 
   button : string ; 
+  id ?: string ; 
 }
 
 
 
 function ContestCard(contest : contestProps) {
 
-
+  const router = useRouter() ; 
   return (
     <Card className="w-full max-w-sm">
     <CardHeader>
@@ -34,7 +36,7 @@ function ContestCard(contest : contestProps) {
       Starts on : {contest.startTime}
     </CardContent>
     <CardFooter className="flex-col gap-2">
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full" onClick={()=>{router.push(`/setterDashboard/contests/${contest.id}`)}}>
         {contest.button}
       </Button>
      

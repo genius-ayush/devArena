@@ -1,9 +1,10 @@
-import ContestPage from '@/components/Dashboard/contestPage'
+
+import ContestsPage from '@/components/Dashboard/contestsPage'
 import React from 'react'
 
 function Contest() {
   return (
-    <ContestPage/>
+    <ContestsPage/>
   )
 }
 

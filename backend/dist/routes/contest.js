@@ -93,10 +93,13 @@ router.get('/:id', middlewres_1.setterMiddleware, (req, res) => __awaiter(void 0
         return;
     }
     try {
-        const response = yield prismaClient.contest.findUnique({ where: {
+        const contest = yield prismaClient.contest.findUnique({ where: {
                 setterId, id: contestId
             } });
-        res.status(200).json(response);
+        const questions = yield prismaClient.question.findMany({ where: {
+                contestId
+            } });
+        res.status(200).json({ contest, questions });
     }
     catch (error) {
         res.status(500).json('failed to get the contest');

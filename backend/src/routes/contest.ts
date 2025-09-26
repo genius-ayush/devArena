@@ -104,11 +104,15 @@ router.get('/:id' ,setterMiddleware , async(req , res)=>{
     }
 
     try{
-        const response = await prismaClient.contest.findUnique({ where: {
+        const contest = await prismaClient.contest.findUnique({ where: {
             setterId , id : contestId
         }})
 
-        res.status(200).json(response) ; 
+        const questions = await prismaClient.question.findMany({where : {
+            contestId
+        }})
+
+        res.status(200).json({contest , questions}) ; 
     }catch(error){
         res.status(500).json('failed to get the contest') ; 
     }
