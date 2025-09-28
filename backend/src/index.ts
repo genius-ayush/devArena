@@ -12,6 +12,7 @@ import authRoutes from './routes/auth' ;
 import contestRoutes from './routes/contest' ; 
 import participatonRoutes from './routes/participate' ; 
 import resultRoutes from './routes/result'  ; 
+import participantsRoutes from './routes/participant' ; 
 
 app.get('/' , (req , res)=>{
     res.send('hello world') ; 
@@ -20,7 +21,8 @@ app.get('/' , (req , res)=>{
 app.use('/auth' , authRoutes) ; 
 app.use('/contest' , contestRoutes) ; 
 app.use('/participaton' , participatonRoutes) ; 
-app.use('result' , resultRoutes) ; 
+app.use('/result' , resultRoutes) ;
+app.use('/participant' , participantsRoutes) ;  
 
 
 app.listen(port , ()=>{

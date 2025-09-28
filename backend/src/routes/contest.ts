@@ -7,6 +7,26 @@ const prismaClient = new PrismaClient() ;
 
 const router = Router() ; 
 
+
+router.get('/allContest' , participantMiddleware , async(req , res)=>{
+
+    const partipantId = req.headers['userId'] ; 
+    console.log(partipantId) ; 
+    if(!partipantId){
+        res.status(401).json("Error fetching participant id") ; 
+    }
+
+    try{
+
+        const data = await prismaClient.contest.findMany() ; 
+
+        res.status(200).json(data) ; 
+    }catch(error){
+        res.status(400).json("Error fetching data")  
+        console.error(error)  ; 
+    }
+})
+
 //create context
 router.post('/' , setterMiddleware ,  async(req , res)=>{
 
@@ -155,45 +175,7 @@ router.get('/:id' ,setterMiddleware , async(req , res)=>{
 // })
 
 
-router.post('/:contestId/join' , participantMiddleware , async(req , res)=>{
 
-    const participantId = req.headers['userId'] ; 
-    const contestId = req.params.contestId ;
-
-
-    if(typeof(participantId) != 'string'){
-        return res.status(500).send("invalid partipant id") ;
-    }
-
-
-    if(!contestId){
-        return res.status(500).json('no contestId found') ; 
-    }
-
-    try{
-
-        const participation = await prismaClient.contestParticipation.upsert({
-            where: {
-                participantId_contestId: {
-                  participantId,
-                  contestId,
-                },
-              },
-        
-            update : {} , 
-            create:{
-                participantId , contestId , status: 'REGISTERED'
-            }
-        })
-
-        res.status(200).json(participation) ; 
-    }catch(error){
-        console.error(error) ; 
-        res.status(500).json({
-            message: "error joining the contest"  
-        })
-    }
-})
 
 router.patch('/contest/:contestId/start' , participantMiddleware , async(req , res)=>{
     
@@ -278,5 +260,7 @@ router.post('/contest/:contestId/:questionId/submit' , participantMiddleware , a
 
     
 })
+
+
 
 export default router ; 

@@ -15,6 +15,21 @@ const prisma_1 = require("../../generated/prisma");
 const types_1 = require("../types");
 const prismaClient = new prisma_1.PrismaClient();
 const router = (0, express_1.Router)();
+router.get('/allContest', middlewres_1.participantMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const partipantId = req.headers['userId'];
+    console.log(partipantId);
+    if (!partipantId) {
+        res.status(401).json("Error fetching participant id");
+    }
+    try {
+        const data = yield prismaClient.contest.findMany();
+        res.status(200).json(data);
+    }
+    catch (error) {
+        res.status(400).json("Error fetching data");
+        console.error(error);
+    }
+}));
 //create context
 router.post('/', middlewres_1.setterMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
@@ -131,37 +146,6 @@ router.get('/:id', middlewres_1.setterMiddleware, (req, res) => __awaiter(void 0
 //         return ; 
 //     }
 // })
-router.post('/:contestId/join', middlewres_1.participantMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const participantId = req.headers['userId'];
-    const contestId = req.params.contestId;
-    if (typeof (participantId) != 'string') {
-        return res.status(500).send("invalid partipant id");
-    }
-    if (!contestId) {
-        return res.status(500).json('no contestId found');
-    }
-    try {
-        const participation = yield prismaClient.contestParticipation.upsert({
-            where: {
-                participantId_contestId: {
-                    participantId,
-                    contestId,
-                },
-            },
-            update: {},
-            create: {
-                participantId, contestId, status: 'REGISTERED'
-            }
-        });
-        res.status(200).json(participation);
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "error joining the contest"
-        });
-    }
-}));
 router.patch('/contest/:contestId/start', middlewres_1.participantMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const participantId = req.headers['userId'];
     const contestId = req.params.contestId;

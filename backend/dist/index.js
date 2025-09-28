@@ -15,13 +15,15 @@ const auth_1 = __importDefault(require("./routes/auth"));
 const contest_1 = __importDefault(require("./routes/contest"));
 const participate_1 = __importDefault(require("./routes/participate"));
 const result_1 = __importDefault(require("./routes/result"));
+const participant_1 = __importDefault(require("./routes/participant"));
 app.get('/', (req, res) => {
     res.send('hello world');
 });
 app.use('/auth', auth_1.default);
 app.use('/contest', contest_1.default);
 app.use('/participaton', participate_1.default);
-app.use('result', result_1.default);
+app.use('/result', result_1.default);
+app.use('/participant', participant_1.default);
 app.listen(port, () => {
     console.log(`Application running at ${port}`);
 });

@@ -49,9 +49,10 @@ export const setterMiddleware = (req : Request , res : Response , next : NextFun
 }
 
 export const participantMiddleware = (req : Request , res : Response , next :NextFunction)=>{
-
+    console.log("reached here") ; 
     const authtoken = req.headers.authorization?.split(" ")[1] ; 
-
+    console.log(authtoken) ; 
+    console.log(req.headers.authorization) ; 
     if(!authtoken){
         res.status(403).send({
             message: "token now found" , 
@@ -64,7 +65,7 @@ export const participantMiddleware = (req : Request , res : Response , next :Nex
 
     try{
 
-
+        console.log(process.env.JWT_SECRET_PARTICIPANT) ; 
         jwt.verify(authtoken , process.env.JWT_SECRET_PARTICIPANT! , (error , payload)=>{
 
             if(error){

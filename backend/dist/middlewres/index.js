@@ -42,7 +42,10 @@ const setterMiddleware = (req, res, next) => {
 exports.setterMiddleware = setterMiddleware;
 const participantMiddleware = (req, res, next) => {
     var _a;
+    console.log("reached here");
     const authtoken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    console.log(authtoken);
+    console.log(req.headers.authorization);
     if (!authtoken) {
         res.status(403).send({
             message: "token now found",
@@ -51,6 +54,7 @@ const participantMiddleware = (req, res, next) => {
         return;
     }
     try {
+        console.log(process.env.JWT_SECRET_PARTICIPANT);
         jsonwebtoken_1.default.verify(authtoken, process.env.JWT_SECRET_PARTICIPANT, (error, payload) => {
             if (error) {
                 res.status(403);

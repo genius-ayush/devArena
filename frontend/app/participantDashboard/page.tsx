@@ -1,9 +1,10 @@
+import ParticipantContestPage from '@/components/Dashboard/ParticipantContestPage';
 import React from 'react'
 
 function SetterDashboard() {
   return (
     <div className="">
-    Participant Dashboard
+      <ParticipantContestPage/>
   </div>
   )
 }

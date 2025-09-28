@@ -36,9 +36,15 @@ function ContestCard(contest : contestProps) {
       Starts on : {contest.startTime}
     </CardContent>
     <CardFooter className="flex-col gap-2">
-      <Button type="submit" className="w-full" onClick={()=>{router.push(`/setterDashboard/contests/${contest.id}`)}}>
+
+      {
+        (contest.button === 'Edit')? (<Button type="submit" className="w-full" onClick={()=>{router.push(`/setterDashboard/contests/${contest.id}`)}}>
         {contest.button}
-      </Button>
+      </Button>) : (<Button type="submit" className="w-full" onClick={()=>{router.push(`/participantDashboard/contests/${contest.id}`)}}>
+        {contest.button}
+      </Button>)
+      }
+      
      
     </CardFooter>
   </Card>
